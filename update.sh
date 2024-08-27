@@ -44,7 +44,7 @@ sleep 1
 echo "Prepare wg setup..."
 cd #
 cd home/scripts/wg
-./setup.sh
+./install.sh
 }
 
 if start_script
