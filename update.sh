@@ -50,7 +50,7 @@ cd home/scripts/wg
 if start_script
 then
  end_script
-echo Finished updating - ${HN}
+echo Finished updating WG on - ${HOSTNAME}
  exit 0
 else
  echo " Script failed - sending email"
