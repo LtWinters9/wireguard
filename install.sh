@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-echo "Please enter admin password"
-read AUTH_ADMIN
+WGPW='HASH HERE'
+echo ""
 echo "Please enter IP or Hostname"
 read HST
 
@@ -38,20 +38,20 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 
 function setup_wg {
 echo "docker run wireguard"
-docker run -d \
-  --name=wg-easy \
-  -e WG_HOST=${HST}  \
-  -e PASSWORD=${AUTH_ADMIN} \
-  -e UI_TRAFFIC_STATS="true" \
-  -e LANG="en" \
-  -e WG_DEFAULT_DNS="1.1.1.1, 1.0.0.1" \
-  -v ~/.wg-easy:/etc/wireguard \
-  -p 51820:51820/udp \
-  -p 51821:51821/tcp \
-  --cap-add=NET_ADMIN \
-  --cap-add=SYS_MODULE \
-  --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
-  --sysctl="net.ipv4.ip_forward=1" \
+docker run --detach \
+  --name wg-easy \
+  --env LANG=en \
+  --env WG_HOST=${HST} \
+  --env PASSWORD_HASH=${WGPW} \
+  --env PORT=51821 \
+  --env WG_PORT=51820 \
+  --volume ~/.wg-easy:/etc/wireguard \
+  --publish 51820:51820/udp \
+  --publish 51821:51821/tcp \
+  --cap-add NET_ADMIN \
+  --cap-add SYS_MODULE \
+  --sysctl 'net.ipv4.conf.all.src_valid_mark=1' \
+  --sysctl 'net.ipv4.ip_forward=1' \
   --restart unless-stopped \
   ghcr.io/wg-easy/wg-easy
 }
@@ -65,5 +65,5 @@ setup_wg && clear
 clear
 echo all done!
 echo ""
-echo you can login here:  http://${HST}:51821
+echo you can login here:  https://${HST}
 exit 1
