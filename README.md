@@ -1,4 +1,4 @@
-# wg1 — WireGuard VPN (wg1)
+# WireGuard VPN (wg1)
 
 WireGuard VPN server managed via [wg-easy](https://github.com/wg-easy/wg-easy). Serves as a VPN gateway
 
