@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Global options
+# ─────────────────────────────────────────────────────────────────────────────
+{
+	# Global TLS server settings for :443
+	servers :443 {
+		timeouts {
+			# Valid keys: read_body, read_header, write, idle
+			read_header 180s
+			read_body 180s
+			write 180s
+			idle 180s
+		}
+	}
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# wg-easy (wg1) — WireGuard web UI
+# ─────────────────────────────────────────────────────────────────────────────
+sub.domain.net {
+	reverse_proxy 127.0.0.1:51824 {
+		transport http {
+			dial_timeout 20s
+			read_timeout 180s
+			write_timeout 180s
+		}
+	}
+
+	encode gzip zstd
+
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Frame-Options "DENY"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Robots-Tag "noindex, nofollow"
+	}
+
+	log {
+		output file /var/log/caddy/wg1_access.log {
+			roll_size 50mb
+			roll_keep 7
+			roll_keep_for 3d
+		}
+		format json
+		level INFO
+	}
+}
