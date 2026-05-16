@@ -15,7 +15,7 @@ WireGuard VPN server managed via [wg-easy](https://github.com/wg-easy/wg-easy). 
 
 ## Prerequisites
 
-- Docker + Docker Compose installed [Guide](https://github.com/LtWinters9/ks-docker).
+- Docker + Docker Compose [installed](https://github.com/LtWinters9/ks-docker).
 - Ports `51823/udp` and `51824/tcp` open in the firewall
 - Domain `sub.domain.net` pointing to the server's public IP
 
