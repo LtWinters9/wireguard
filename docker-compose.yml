@@ -1,0 +1,60 @@
+# -----------------------------------------------------------------------------
+# WireGuard VPN Stack
+# This compose file manages only the wg1 VPN container
+# -----------------------------------------------------------------------------
+
+networks:
+  wg-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1
+
+services:
+  # ---------------------------------------------------------
+  # WireGuard VPN Container (wg-easy) - wg1
+  # ---------------------------------------------------------
+  wg1:
+    image: ghcr.io/wg-easy/wg-easy:15
+    container_name: wg1
+    restart: unless-stopped
+    privileged: true
+    networks:
+      wg-network:
+        ipv4_address: 172.21.0.12  # Static IP for wg1
+    # AdGuard DNS configuration
+    dns:
+      - 1.1.1.1      # Cloudflare DNS Default
+      - 8.8.8.8      # Google DNS Backup
+    environment:
+      # Web UI settings
+      - PORT=${PORT}
+      - INSECURE=${INSECURE}
+      - DISABLE_IPV6=true
+      # Unattended first-start setup — remove INIT_* vars after first boot
+      - INIT_ENABLED=true
+      - INIT_USERNAME=${INIT_USERNAME}
+      - INIT_PASSWORD=${INIT_PASSWORD}
+      - INIT_HOST=${INIT_HOST}
+      - INIT_PORT=${INIT_PORT}
+      # DNS for WireGuard clients (Custom DNS)
+      - INIT_DNS=${INIT_DNS}
+    volumes:
+      - ~/.wg1-easy:/etc/wireguard
+      - /lib/modules:/lib/modules:ro
+    ports:
+      - "51823:51823/udp"   # WireGuard VPN port
+      - "51824:51824/tcp"   # wg-easy web UI
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.disable_ipv6=1
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
