@@ -23,7 +23,7 @@ services:
     networks:
       wg-network:
         ipv4_address: 172.21.0.12  # Static IP for wg1
-    # AdGuard DNS configuration
+    # Container DNS configuration
     dns:
       - 1.1.1.1      # Cloudflare DNS Default
       - 8.8.8.8      # Google DNS Backup
