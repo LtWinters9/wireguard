@@ -68,7 +68,7 @@ docker compose restart wg1
 http://sub.domain.net:51824
 ```
 
-Or via Caddy reverse proxy if configured. Log in with the `INIT_USERNAME` / `INIT_PASSWORD` credentials set in `.env`.
+Or via [Caddy reverse proxy](https://github.com/LtWinters9/ks-caddy) if configured. Log in with the `INIT_USERNAME` / `INIT_PASSWORD` credentials set in `.env`.
 
 ---
 
